@@ -1,5 +1,7 @@
 # Python Package Builder
 
+***IMPORTANT*** This repository is very much a work in progress, use at your own risk.
+
 This provides abstractions to generate a Python package from code. The purpose is to decouple the generation of
 directories and files from the schema/source to convert. 
 
@@ -7,6 +9,17 @@ For example with GraphQL API's you will want to parse the schema and convert the
 relevant components from this Package Builder. A different use case could be to parse the AWS botocore
 json files and generate classes for all the AWS models.
 
+# Usage
+
+Clone the repository locally and install it with pip. The example.py builds a sample
+package in the default packagebuild folder.
+
+```sh
+git clone https://github.com/thiezn/pckbuilder-python.git
+python3 -m pip install .
+chmod +x example.py
+./example.py
+```
 
 # Components
 
@@ -18,94 +31,48 @@ package = PackageComponent(...)
 build(package)
 ```
 
-## Package
+## PackageComponent
 
 A package is a Python module which can contain submodules or recursively, subpackages. Technically, a package is a Python module with a __path__ attribute.
 
-TODO: How can I be flexible in where to generate the __init__.py files. sometimes you want sub folders but imports happening in top
-level folder.
+https://docs.python.org/3/glossary.html#term-package
 
-Arguments:
-    name: str
-    description: str
-    modules: List[Module]
-    subpackages: List[Package]  # Lets leave out support initially for this, or perhaps 
-                                # create a separate SubPackage class. We only want to generate 
-                                # a single pyproject.toml file for instance.
-
-## Module
+## ModuleComponent
 
 A Python module is an object that serves as an organizational unit of Python code. Modules have a namespace containing arbitrary Python objects. Modules are loaded into Python by the process of importing.
 
 https://docs.python.org/3/glossary.html#term-module
 
-Arguments:
- name: str
- description: str
- imports: List[str]
- variables: List[Variable]
- classes: List[Class]
- functions: List[Function]
 
-
-## Variable
+## VariableComponent
 
 Holds a single value
 
-Arguments:
-    name: str
-    description: str
-    type: Type
-
-## Type
+## TypeComponent
 
 A Python type. This can be a builtin Python type like str or int, or it could be a custom class defined in the package
 
-Arguments:
-    name: str
-    is_optional: bool
-    is_built_in: bool
-    # TODO: how to represent Unions?
-    # TODO: how to switch between old style type hints and > 3.9/.10 type hints? maybe something like:
-    # python_version: str  # This determines how to represent some of the built_in types, eg. List vs list
-
-## Function
+## FunctionComponent
 
 A function is a series of statements which returns some value to a caller. It can also be passed zero or more arguments which may be used in the execution of the body.
 
 https://docs.python.org/3/glossary.html#term-function
 
-Arguments:
-    name: str
-    description: str
-    arguments: List[Variables]
-    keyword_arguments: List[Variables]
-    return_type: Type
-    body: str
 
-## Method
+## MethodComponent
 
 A method is a function that is part of a class. The key differentiator is that its first argument is (usually) self. In the case of a classmethod it can also be cls, or with staticmethod doesn't have a first method
 
-Inherits from Function
+Inherits from FunctionComponent
 
-Arguments:
-    is_classmethod: bool
-    is_staticmethod: bool
+https://docs.python.org/3/glossary.html#term-method
 
-## Class
+
+## ClassComponent
 
 A template for creating user-defined objects. Class definitions normally contain method definitions which operate on instances of the class.
 
 https://docs.python.org/3/glossary.html#term-class
-
-Arguments:
-    name: str
-    description: str
-    base_class_name: Optional[str]  # Or do we need the whole class? This determines inheritance
-    decorator: str # name of a decorator like dataclass? Or perhaps something like is_dataclass instead?
-    class_arguments: [Variable]  # These are 'global' class variables, NOT the ones from __init__
-    methods: [Method]  # Do i need a special __init__ method representation and perhaps some others?
 
 
 # Text helper
