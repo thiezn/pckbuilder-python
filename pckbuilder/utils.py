@@ -56,8 +56,6 @@ class Text:
                 text = self._indent(text, indent)
 
             self._text += text
-
-            self._text.lstrip("\n")
         else:
             for item in text:
                 if isinstance(item, str):
@@ -65,6 +63,7 @@ class Text:
                 else:
                     self.add(item.text(), indent, newlines=1)  # type: ignore
 
+        self._text = self._text.rstrip("\n")
         self._text += newlines * "\n"
 
     def add_shebang(self):

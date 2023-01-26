@@ -96,7 +96,6 @@ adding newlines.
 just a string
 multiple
 lines
-
     indented
 space is the place
 
