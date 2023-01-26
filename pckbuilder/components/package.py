@@ -20,6 +20,7 @@ class PackageComponent:
         install_requirements: Optional[List[str]] = None,
         keywords: Optional[List[str]] = None,
         imports: Optional[List[str]] = None,
+        readme: Optional[str] = None,
     ):
         """Initialize our PackageComponent.
 
@@ -28,6 +29,7 @@ class PackageComponent:
         :param version: The version of the python package
         :param modules: The list of modules part of this package
         :param imports: The list of imports to add to the package __init__.py file
+        :param readme: The custom contents of the README.md file of this package
         """
         self.name = name
         self.description = description
@@ -42,6 +44,7 @@ class PackageComponent:
         self.install_requirements = install_requirements
         self.keywords = keywords
         self.imports = imports or []
+        self.readme = readme
 
     def pyproject(self, include_pytest=True, custom_data: Optional[str] = None) -> str:
         """Generate pyproject.toml contents."""
@@ -120,5 +123,26 @@ testpaths = [
         text = Text()
         text.add_docstring(f"{self.name} package.\n{self.description}")
         text.add(self.imports)
+
+        return text.string
+
+    def readme_text(self) -> str:
+        """Generate README.md contents."""
+        if self.readme:
+            return self.readme
+
+        text = Text()
+        text.add(f"# {self.name}", newlines=2)
+        text.add(self.description, newlines=2)
+        text.add(f"# Installation")
+        text.add(
+            """
+Clone this repository locally and install it with pip. 
+
+```sh
+git clone <repository name>
+python3 -m pip install .
+```"""
+        )
 
         return text.string

@@ -9,6 +9,7 @@ def build(
     build_folder=Path("packagebuild/"),
     create_pyproject_file=True,
     create_setup_file=True,
+    create_readme_file=True,
 ):
     """Build given PackageComponent.
 
@@ -36,6 +37,14 @@ def build(
         write_file(
             package.setup_text(),
             Path(build_folder, "setup.cfg"),
+            format_with_black=False,
+        )
+
+    if create_readme_file:
+        print("Wrinting README.md file")
+        write_file(
+            package.readme_text(),
+            Path(build_folder, "README.md"),
             format_with_black=False,
         )
 
