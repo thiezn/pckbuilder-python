@@ -85,6 +85,7 @@ def main():
         modules=[module],
         install_requirements=["httpx"],
         keywords=["test", "mathijs"],
+        imports=["from .test import MyClass"],
     )
     build(package)
 

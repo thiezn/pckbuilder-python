@@ -19,21 +19,29 @@ class PackageComponent:
         classifiers: Optional[List[str]] = None,
         install_requirements: Optional[List[str]] = None,
         keywords: Optional[List[str]] = None,
+        imports: Optional[List[str]] = None,
     ):
         """Initialize our PackageComponent.
 
         :param name: The name of the module
         :param description: The description of the module
+        :param version: The version of the python package
         :param modules: The list of modules part of this package
+        :param imports: The list of imports to add to the package __init__.py file
         """
         self.name = name
         self.description = description
+
+        if version.count(".") != 2:
+            raise ValueError("Python packages should use symantic versioning (0.1.0)")
+
         self.version = version
         self.modules = modules or []
         self.license = package_license
         self.classifiers = classifiers or ["Programming Language :: Python :: 3"]
         self.install_requirements = install_requirements
         self.keywords = keywords
+        self.imports = imports or []
 
     def pyproject(self, include_pytest=True, custom_data: Optional[str] = None) -> str:
         """Generate pyproject.toml contents."""
@@ -111,5 +119,6 @@ testpaths = [
         """Generate __init__.py contents."""
         text = Text()
         text.add_docstring(f"{self.name} package.\n{self.description}")
+        text.add(self.imports)
 
         return text.string
