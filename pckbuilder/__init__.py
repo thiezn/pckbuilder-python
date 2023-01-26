@@ -7,3 +7,4 @@ from .components.function import FunctionComponent
 from .components.method import MethodComponent
 from .components.class_ import ClassComponent
 from .build import build
+from .utils import Text
